@@ -1,0 +1,49 @@
+<script src="https://unpkg.com/@reactivex/rxjs/dist/global/rxjs.umd.js"></script>
+<script>
+  const {fromEvent} = rxjs
+  const {timeInterval, pluck, scan, tap} = rxjs.operators
+
+  const clicks$ = fromEvent(document, 'click').pipe(
+    timeInterval(),
+    pluck('interval'),
+    scan((acc, i) => acc + i, 0),
+    tap(x => console.log('CLICKED: ' + x))
+  )
+  clicks$.subscribe()
+
+  // debounceTime 일정시간동안 다음 입력이 오지않으면 출력
+  // const {debounceTime} = rxjs.operators
+  // clicks$.pipe(
+  //   debounceTime(1000)
+  // ).subscribe(x => console.log('OUTPUT: -------- ' + x))
+
+  // auditTime은 특정 값이 발행되고 1초가 지날때, 마지막 입력을 출력
+  // const { auditTime } = rxjs.operators
+  // clicks$.pipe(
+  //   auditTime(1000)
+  // ).subscribe(x => console.log('OUTPUT: -------- ' + x))
+
+  // 특정 시간 간격으로 출력
+  // const { sampleTime } = rxjs.operators
+  // clicks$.pipe(
+  //   sampleTime(1000),
+  //   timeInterval()
+  // ).subscribe(x => console.log('OUTPUT: -------- ' + x.value + ' :' + x.interval))
+
+  // leading이 true면 맨 앞값 출력후 1000동안 출력 X
+  // const {throttleTime} = rxjs.operators
+  // clicks$.pipe(
+  //   throttleTime(1000, undefined, {
+  //     leading: true, trailing: false
+  //   })
+  // ).subscribe(x => console.log('OUTPUT: -------- ' + x))
+
+  // trailing이 true면 마지막 값 출력 후 1000동안 출력X
+  const { throttleTime } = rxjs.operators
+  clicks$.pipe(
+    throttleTime(1000, undefined, {
+      leading: false, trailing: true
+    })
+  ).subscribe(x => console.log('OUTPUT: -------- ' + x))
+
+</script>
