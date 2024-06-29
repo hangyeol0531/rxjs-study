@@ -1,0 +1,90 @@
+<script src="https://unpkg.com/@reactivex/rxjs/dist/global/rxjs.umd.js"></script>
+<input type="number">
+<script>
+
+  // const {from, fromEvent} = rxjs
+  // const {filter, sequenceEqual, map, take} = rxjs.operators
+  //
+  // const num$ = from([3, 1, 4, 7, 5, 8, 2])
+  //
+  // // sequenceEqual 입력 값이 같은지 처리
+  // const key$ = fromEvent(document, 'keyup').pipe(
+  //   map(e => Number(e.code.replace('Digit', ''))),
+  //   filter(e => !!e),
+  //   take(7),
+  //   sequenceEqual(num$)
+  // ).subscribe(console.log)
+
+  // const { of, from } = rxjs
+  // const { distinctUntilChanged } = rxjs.operators
+  //
+  // // distinctUntilChanged는 연속적인 것만 중복 제거
+  // of(1, 1, 2, 2, 2, 1, 1, 2, 3, 3, 3, 4, 4, 1).pipe(
+  //   distinctUntilChanged(),
+  // ).subscribe(console.log)
+  //
+  // const students = [
+  //   { name: '홍길동', sex: 'male' },
+  //   { name: '전우치', sex: 'male' },
+  //   { name: '아라치', sex: 'female' },
+  //   { name: '성춘향', sex: 'female' },
+  //   { name: '임꺽정', sex: 'male' },
+  // ]
+  //
+  // // object의 특정 키를 받아서 처리
+  // from(students).pipe(
+  //   distinctUntilChanged((a, b) => a.sex === b.sex),
+  // ).subscribe(console.log)
+
+  // const { combineLatest, interval, fromEvent } = rxjs
+  // const { pluck } = rxjs.operators
+
+  // 두 스트림을 최신 값들끼리 결합해줌
+  // combineLatest(
+  //   interval(2000),
+  //   fromEvent(document, 'click').pipe(pluck('x'))
+  // ).subscribe(console.log)
+
+
+  // 이벤트 발생시 까지 값을 놓아놓고 처리
+  // const { interval, fromEvent } = rxjs
+  // const { buffer } = rxjs.operators
+  //
+  // interval(1000).pipe(
+  //   buffer(fromEvent(document, 'click'))
+  // ).subscribe(console.log)
+
+
+  // const { range } = rxjs
+  // const { bufferCount } = rxjs.operators
+  //
+  // // n개 씩 자르고 m개씩 shift 하여 처리,
+  // range(1, 100).pipe(
+  //   bufferCount(10, 10)
+  // ).subscribe(console.log)
+
+  // const { fromEvent } = rxjs
+  // const { bufferCount } = rxjs.operators
+  //
+  // // 클릭을 3번해야 처리
+  // fromEvent(document, 'click').pipe(
+  //   bufferCount(3)
+  // ).subscribe(_ => console.log('FIRE'))
+
+  const {interval} = rxjs
+  const {bufferTime} = rxjs.operators
+
+  // 시간 간격으로 끊어줌, 2초에 한 번 씩 출력
+  // interval(200).pipe(
+  //   bufferTime(2000)
+  // ).subscribe(console.log)
+
+  const {range} = rxjs
+  const {groupBy, mergeMap, toArray} = rxjs.operators
+
+  // 특정 스트림 그룹으로 나누어 발행한다.
+  range(1, 50).pipe(
+    groupBy(x => x % 3),
+    mergeMap(groups$ => groups$.pipe(toArray()))
+  ).subscribe(console.log)
+</script>

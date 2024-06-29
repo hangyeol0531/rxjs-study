@@ -1,0 +1,122 @@
+<script src="https://unpkg.com/@reactivex/rxjs/dist/global/rxjs.umd.js"></script>
+<input type="checkbox" id="check">
+<script>
+  // const { of } = rxjs
+  // const { startWith, endWith } = rxjs.operators
+  //
+  // const obs$ = of (1, 2, 3)
+  //
+  // // 0을 붙여서 시작
+  // obs$.pipe(startWith(0)).subscribe(console.log)
+  // obs$.pipe(endWith(4, 5)).subscribe(console.log)
+
+  // const { of } = rxjs
+  // const { every } = rxjs.operators
+  //
+  // // 모두 만족하는지 확인
+  // of(1, 3, 5, 7, 9, 11, 13, 15).pipe(
+  //   every(x => x % 2 !== 0)
+  // ).subscribe(console.log)
+
+  // const { fromEvent, timer } = rxjs
+  // const { defaultIfEmpty, pluck, takeUntil } = rxjs.operators
+  //
+  // // 스트림이 없을때 defaultIfEmpty로 받은 값을 출력
+  // // 5초동안 입력안할시 No Click 출력
+  // fromEvent(document, 'click').pipe(
+  //   takeUntil(timer(5000)),
+  //   pluck('x'),
+  //   defaultIfEmpty('NO CLICK')
+  // ).subscribe(console.log)
+
+  // const { range } = rxjs
+  // const { ajax } = rxjs.ajax
+  // const { mergeMap, pluck, retry, } = rxjs.operators
+  //
+  // // retry는 실패하면 재시도
+  // range(1, 20).pipe(
+  //   mergeMap(keyword => ajax(
+  //       `http://127.0.0.1:3000/people/quarter-error/${keyword}`
+  //     ).pipe(
+  //       pluck('response', 'first_name'),
+  //       retry(3)
+  //     )
+  //   )
+  // ).subscribe(console.log)
+
+  // const { defer, fromEvent, of } = rxjs
+  // const { pluck } = rxjs.operators
+  //
+  // fromEvent(document.querySelector('#check'), 'change').pipe(
+  //   pluck('target', 'checked')
+  // ).subscribe(checked => {
+  //   // 구독하는 순간에 특정 스트림 생성
+  //   defer(_ =>
+  //     checked ? of('CHECKED') : of('UNCHECKED')
+  //   ).subscribe(console.log)
+  // })
+
+  // const { iif, fromEvent, of } = rxjs
+  // const { pluck } = rxjs.operators
+  //
+  // // iif은 defer를 좀 더 깔끔하게 사용이 가능하다.
+  // fromEvent(document.querySelector('#check'), 'change').pipe(
+  //   pluck('target', 'checked')
+  // ).subscribe(checked => {
+  //   iif(
+  //     _ => checked,
+  //     of('CHECKED'),
+  //     of('UNCHECKED')
+  //   ).subscribe(
+  //     console.log,
+  //     err => console.log(err),
+  //     _ => console.log('COMPLETE')
+  //   )
+  // })
+
+  // const { empty } = rxjs
+  // // 빈 스트림 값
+  // empty().subscribe(console.log, console.error, _ => console.log('COMPLETE'))
+
+  // const {throwError} = rxjs
+  // // 에러 발생
+  // throwError('ERROR').subscribe(console.log, console.error, _ => console.log('COMPLETE'))
+
+  // const { interval } = rxjs
+  // const { take, tap, takeLast, share } = rxjs.operators
+  //
+  // const obs$ = interval(1000).pipe(
+  //   take(20),
+  //   // share를 사용하면 3개를 구독해도, 1번만 side effect가 발생
+  //   tap(x => console.log(`side effect: ${x}`)),
+  //   share()
+  // )
+  //
+  // obs$.subscribe(x => console.log(`subscriber 1: ${x}`))
+  //
+  // setTimeout(_ => {
+  //   obs$.subscribe(x => console.log(`subscriber 2: ${x}`))
+  // }, 5000)
+  // setTimeout(_ => {
+  //   obs$.subscribe(x => console.log(`subscriber 3: ${x}`))
+  // }, 10000)
+
+  const { interval } = rxjs
+  const { take, tap, takeLast, shareReplay } = rxjs.operators
+
+  const obs$ = interval(1000).pipe(
+    take(20),
+    tap(x => console.log(`side effect: ${x}`)),
+    // shareReplay를 사용하면 마지막 N개를 새 구독자에게 발행
+    shareReplay(3)
+  )
+
+  obs$.subscribe(x => console.log(`subscriber 1: ${x}`))
+
+  setTimeout(_ => {
+    obs$.subscribe(x => console.log(`subscriber 2: ${x}`))
+  }, 5000)
+  setTimeout(_ => {
+    obs$.subscribe(x => console.log(`subscriber 3: ${x}`))
+  }, 10000)
+</script>
