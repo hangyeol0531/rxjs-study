@@ -1,0 +1,97 @@
+<script src="https://unpkg.com/@reactivex/rxjs/dist/global/rxjs.umd.js"></script>
+<script>
+  // const {merge, interval, fromEvent} = rxjs
+  // const {map} = rxjs.operators
+  //
+  // const interval$ = interval(1000).pipe(map(_ => 'interval'))
+  // const click$ = fromEvent(document, 'click').pipe(map(_ => 'click'))
+  //
+  // // stream 병합
+  // merge(interval$, click$).subscribe(console.log)
+
+  // const { merge, interval } = rxjs
+  // const { map, take } = rxjs.operators
+  //
+  // const intv1$ = interval(1000).pipe(
+  //   map(_ => 'INTERVAL 1'), take(3))
+  // const intv2$ = interval(1000).pipe(
+  //   map(_ => 'INTERVAL 2'), take(6))
+  // const intv3$ = interval(1000).pipe(
+  //   map(_ => 'INTERVAL 3'), take(9))
+  // const intv4$ = interval(1000).pipe(
+  //   map(_ => 'INTERVAL 4'), take(9))
+  // const intv5$ = interval(1000).pipe(
+  //   map(_ => 'INTERVAL 5'), take(9))
+
+  // 공통되는 부분만 3개씩 실행
+  // 1로 하면 이어 붙이는 형식이 된다.
+  // merge(intv1$, intv2$, intv3$, intv4$, intv5$, 3)
+  // .subscribe(console.log)
+
+  // 이어 붙이는 형식
+  // merge(intv1$, intv2$, intv3$, intv4$, intv5$, 1)
+  // .subscribe(console.log)
+
+  // const { concat, interval, fromEvent } = rxjs
+  // const { map, take } = rxjs.operators
+  //
+  // const interval$ = interval(1000).pipe(
+  //   map(_ => 'interval'), take(5))
+  // const click$ = fromEvent(document, 'click').pipe(map(_ => 'click'))
+  //
+  // // concat은 앞 observable이 complete해야 뒤를 처리한다.
+  // concat(interval$, click$).subscribe(console.log)
+
+  // const { interval, fromEvent } = rxjs
+  // const { mergeMap, map, take } = rxjs.operators
+
+  // 한 스트림이 끝나기 전에 다른 스트림이 함께 merge된다.
+  // fromEvent(document, 'click').pipe(
+  //   mergeMap(e => interval(1000).pipe(
+  //     map(i => e.x + ' : ' + i),
+  //     take(5)
+  //   ))
+  // ).subscribe(console.log)
+
+  // const { of } = rxjs
+  // const { ajax } = rxjs.ajax
+  // const { mergeMap, pluck } = rxjs.operators
+  //
+  // of(3, 15, 4, 9, 1, 7).pipe(
+  //   mergeMap(keyword => ajax(
+  //       `http://127.0.0.1:3000/people/${keyword}`
+  //     ).pipe(
+  //       pluck('response', 'first_name')
+  //     )
+  //   )
+  // ).subscribe(console.log)
+
+  // const { interval, fromEvent } = rxjs
+  // const { concatMap, map, take } = rxjs.operators
+  //
+  // // merge와 달리 이전 stream이 complete 후 다음꺼 출력
+  // fromEvent(document, 'click').pipe(
+  //   concatMap(e => interval(1000).pipe(
+  //     map(i => e.x + ' : ' + i),
+  //     take(5)
+  //   ))
+  // ).subscribe(console.log)
+
+  const { interval, fromEvent } = rxjs
+  const { switchMap, map, take } = rxjs.operators
+
+  // concatMap과 다르게 다음이 나오면 이전거 끊고 다음꺼 처리
+  fromEvent(document, 'click').pipe(
+    switchMap(e => interval(1000).pipe(
+      map(i => e.x + ' : ' + i),
+      take(5)
+    ))
+  ).subscribe(console.log)
+
+  const { mergeMapTo } = rxjs.operators
+
+  // ..MapTo 연사자들을 이용해 인자 간략하게 사용 가능
+  fromEvent(document, 'click').pipe(
+    mergeMapTo(interval(1000).pipe(take(5))),
+  ).subscribe(console.log)
+</script>
