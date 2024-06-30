@@ -42,7 +42,7 @@ obs$.pipe(
   reduce((acc, curr) => acc + curr, 0)
 ).subscribe(x => console.log(x));
 
-// tab 중간에 로그 찍는 용 -> 최종 결과물에 영향 x
+// tap 중간에 로그 찍는 용 -> 최종 결과물에 영향 x
 from([
   9, 3, 10, 5, 1, 10, 9, 9, 1, 4, 1, 8, 6, 2, 7, 2, 5, 5, 10, 2
 ]).pipe(
